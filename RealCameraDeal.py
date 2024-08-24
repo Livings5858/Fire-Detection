@@ -16,6 +16,9 @@ def publish_image_msg(client, fileName):
     print (imageFullPath)
     if detect_fire(imageFullPath):
         msg_image_detect_info = client.publish("image_dectected", "fire", qos=1)
+    else:
+        msg_image_detect_info = client.publish("image_dectected", "nofire", qos=1)
+
 
 image_data = {}
 def on_message(client, userdata, msg):

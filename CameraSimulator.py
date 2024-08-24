@@ -52,6 +52,10 @@ while True:
         msg_image_detect_info = mqttc.publish("image_dectected", "fire", qos=1)
         unacked_publish.add(msg_image_detect_info.mid)
         msg_image_detect_info.wait_for_publish()
+    else:
+        msg_image_detect_info = mqttc.publish("image_dectected", "nofire", qos=1)
+        unacked_publish.add(msg_image_detect_info.mid)
+        msg_image_detect_info.wait_for_publish()
     index += 1
     if index >= len(imglist):
         index = 0
