@@ -10,7 +10,7 @@ def detect_fire(image_path, area_threshold=500, circularity_threshold=0.5):
     frame = cv2.imread(image_path)
 
     if frame is None:
-        print("Error: Could not read image.")
+        print("Error: Could not read image." + image_path)
         return False
 
     # 将图像从BGR转换为HSV颜色空间
@@ -48,8 +48,8 @@ def detect_fire(image_path, area_threshold=500, circularity_threshold=0.5):
     return False
 
 # 使用示例
-image_path = 'nofire2.png'  # 替换为你的图片路径
-if detect_fire(image_path):
-    print("Fire detected!")
-else:
-    print("No fire detected.")
+# image_path = 'nofire2.png'  # 替换为你的图片路径
+# if detect_fire(image_path):
+#     print("Fire detected!")
+# else:
+#     print("No fire detected.")

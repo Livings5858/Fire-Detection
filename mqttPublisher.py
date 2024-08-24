@@ -1,5 +1,7 @@
 import time
 import paho.mqtt.client as mqtt
+import random
+from fireDetection import detect_fire
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3
@@ -24,22 +26,34 @@ mqttc.on_publish = on_publish
 
 mqttc.user_data_set(unacked_publish)
 mqttc.connect("localhost")
-mqttc.loop_start()
 
-# Our application produce some messages
-msg_info = mqttc.publish("/python/mqtt", "my message", qos=1)
-unacked_publish.add(msg_info.mid)
+BASE_PATH = "D:\\code\\linux\\embedded\\teach\\springboot-vue\\ui\\vue-project\\public\\"
 
-msg_info2 = mqttc.publish("/python/mqtt", "my message2", qos=1)
-unacked_publish.add(msg_info2.mid)
+imglist = ["nofire2.png", "fire2.png"]
+index = 0
+while True:
+    temperature = round(random.uniform(10, 50))
+    x = round(random.uniform(10, 50))
+    y = round(random.uniform(10, 50))
+    msg = f"{temperature},{x},{y}"
+    mqttc.loop_start()
+    msg_sensor_info = mqttc.publish("sensor", msg, qos=1)
+    unacked_publish.add(msg_sensor_info.mid)
 
-# Wait for all message to be published
-while len(unacked_publish):
-    time.sleep(0.1)
-
-# Due to race-condition described above, the following way to wait for all publish is safer
-msg_info.wait_for_publish()
-msg_info2.wait_for_publish()
+    msg_image_info = mqttc.publish("image_path", imglist[index], qos=1)
+    unacked_publish.add(msg_image_info.mid)
+    imageFullPath = BASE_PATH + imglist[index]
+    print (imageFullPath)
+    if detect_fire(BASE_PATH + imglist[index]):
+        msg_image_detect_info = mqttc.publish("image_dectected", "fire", qos=1)
+        unacked_publish.add(msg_image_detect_info.mid)
+        msg_image_detect_info.wait_for_publish()
+    index += 1
+    if index >= len(imglist):
+        index = 0
+    msg_sensor_info.wait_for_publish()
+    msg_image_info.wait_for_publish()
+    mqttc.loop_stop()
+    time.sleep(5)
 
 mqttc.disconnect()
-mqttc.loop_stop()
