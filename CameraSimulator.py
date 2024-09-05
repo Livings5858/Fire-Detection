@@ -1,7 +1,7 @@
 import time
 import paho.mqtt.client as mqtt
 import random
-from fireDetection import detect_fire
+from FireDetection import detect_fire
 
 def on_publish(client, userdata, mid, reason_code, properties):
     # reason_code and properties will only be present in MQTTv5. It's always unset in MQTTv3
@@ -25,9 +25,9 @@ mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_publish = on_publish
 
 mqttc.user_data_set(unacked_publish)
-mqttc.connect("localhost")
+mqttc.connect("localhost", 1884)
 
-BASE_PATH = "D:\\code\\weihai\\code\\springboot-vue\\ui\\public\\"
+BASE_PATH = "E:\\Resources\\Projects\\rebots\\springboot-vue\\ui\\public\\"
 
 imglist = ["nofire2.png", "fire2.png"]
 index = 0
@@ -35,13 +35,13 @@ while True:
     mqttc.loop_start()
 
     # sensor
-    # temperature = round(random.uniform(10, 50))
-    # x = round(random.uniform(10, 50))
-    # y = round(random.uniform(10, 50))
-    # msg = f"{temperature},{x},{y}"
-    # msg_sensor_info = mqttc.publish("sensor", msg, qos=1)
-    # unacked_publish.add(msg_sensor_info.mid)
-    # msg_sensor_info.wait_for_publish()
+    temperature = round(random.uniform(10, 50))
+    x = round(random.uniform(10, 50))
+    y = round(random.uniform(10, 50))
+    msg = f"{temperature},{x},{y}"
+    msg_sensor_info = mqttc.publish("sensor", msg, qos=1)
+    unacked_publish.add(msg_sensor_info.mid)
+    msg_sensor_info.wait_for_publish()
 
     # image
     msg_image_info = mqttc.publish("image_path", imglist[index], qos=1)

@@ -3,8 +3,8 @@ import numpy as np
 
 def detect_fire(image_path, area_threshold=500, circularity_threshold=0.5):
     # 定义火焰颜色的范围（HSV颜色空间）
-    lower_bound = np.array([18, 50, 50])
-    upper_bound = np.array([35, 255, 255])
+    lower_bound = np.array([0, 200, 200])
+    upper_bound = np.array([15, 255, 255])
 
     # 读取图片
     frame = cv2.imread(image_path)
@@ -31,15 +31,6 @@ def detect_fire(image_path, area_threshold=500, circularity_threshold=0.5):
         area = cv2.contourArea(contour)
         if area < area_threshold:
             continue
-
-        # # 计算轮廓的周长
-        # perimeter = cv2.arcLength(contour, True)
-        
-        # # 使用周长和面积计算轮廓的圆形度（circularity）
-        # if perimeter > 0:
-        #     circularity = 4 * np.pi * (area / (perimeter ** 2))
-        #     if circularity < circularity_threshold:
-        #         continue
 
         # 如果满足面积和形状条件，则检测到火焰
         return True

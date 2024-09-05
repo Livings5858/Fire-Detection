@@ -1,12 +1,12 @@
 import paho.mqtt.client as mqtt
-from fireDetection import detect_fire
+from FireDetection import detect_fire
 
 BROKER = "localhost"
 TOPIC = "image_data"
 DONE_TOPIC = "image_send_done"
 CHUNK_SIZE = 64
 
-BASE_PATH = "D:\\code\\weihai\\code\\springboot-vue\\ui\\public\\"
+BASE_PATH = "E:\\Resources\\Projects\\rebots\\springboot-vue\\ui\\public\\"
 imglist = ["nofire2.png", "fire2.png"]
 index = 1
 
@@ -50,5 +50,5 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 
-client.connect(BROKER, 1883, 60)
+client.connect(BROKER, 1884, 60)
 client.loop_forever()
